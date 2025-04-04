@@ -1,0 +1,246 @@
+<!doctype html>
+<html lang="en">
+    <head>
+        <!-- Global site tag (gtag.js) - Google Analytics -->
+        <script async src="https://www.googletagmanager.com/gtag/js?id=UA-176109454-1"></script>
+        <script>
+            window.dataLayer = window.dataLayer || [];
+            function gtag(){dataLayer.push(arguments);}
+            gtag('js', new Date());
+
+            gtag('config', 'UA-176109454-1');
+        </script>
+
+        <title>BloxSchem</title>
+
+        <!-- Google Fonts - Orbitron for Futuristic Look -->
+        <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;500;700&display=swap" rel="stylesheet">
+
+        <!-- https://github.com/kpanuragh/zlib -->
+        <script src="zlib.js"></script>
+
+        <!-- https://github.com/sjmulder/nbt-js -->
+        <script src="nbt.js"></script>
+
+        <script src="schemtoschematic.js"></script>
+
+        <script>
+            function uploadFile(file) {
+                console.log('Processing ' + file.name);
+                var fr = new FileReader();
+                fr.onload = function() {
+                    schemtoschematic(fr.result, function(data) {                        
+                        var name = file.name;
+                    
+                        if (~name.lastIndexOf('.')) {
+                            name = name.substr(0, name.lastIndexOf('.'));
+                        }
+                    
+                        name += '.schematic';
+                    
+                        var blob = new Blob([data], {type: 'application/nbt'});
+                        var link = document.createElement('a');
+                        link.href = window.URL.createObjectURL(blob);
+                        link.download = name;
+                        link.innerHTML = 'Download ' + name;
+                        link.classList.add('download-link');
+                        link.click();
+                        var li = document.createElement('li');
+                        li.appendChild(link);
+                        document.querySelector('#downloads').appendChild(li);
+                    });
+                };
+                fr.readAsArrayBuffer(file);
+            }
+
+            function upload(input) {
+                for (var i = 0; i < input.files.length; i++) {
+                    uploadFile(input.files[i]);
+                }
+            }
+        </script>
+
+        <style>
+            * {
+                margin: 0;
+                padding: 0;
+                box-sizing: border-box;
+                font-family: 'Orbitron', sans-serif;
+            }
+
+            body {
+                background: #121212;
+                color: #fff;
+                font-size: 16px;
+                overflow-x: hidden;
+                height: 100%;
+                display: flex;
+                flex-direction: column;
+                align-items: center;
+                justify-content: center;
+            }
+
+            /* Background Animation */
+            @keyframes gradient {
+                0% { background: linear-gradient(45deg, #ff0080, #00e5ff, #ff0080); }
+                50% { background: linear-gradient(45deg, #00e5ff, #ff0080, #00e5ff); }
+                100% { background: linear-gradient(45deg, #ff0080, #00e5ff, #ff0080); }
+            }
+
+            body {
+                animation: gradient 10s ease infinite;
+            }
+
+            section {
+                background: rgba(0, 0, 0, 0.6);
+                border-radius: 15px;
+                box-shadow: 0px 8px 40px rgba(0, 0, 0, 0.5);
+                padding: 40px;
+                width: 100%;
+                max-width: 600px;
+                transform: scale(1);
+                transition: transform 0.3s ease-in-out;
+                text-align: center;
+                animation: fadeIn 1.5s ease-out;
+            }
+
+            section:hover {
+                transform: scale(1.05);
+            }
+
+            h1 {
+                font-size: 60px;
+                color: #00e5ff;
+                text-align: center;
+                margin-bottom: 20px;
+                font-weight: bold;
+                font-family: 'Orbitron', sans-serif;
+                text-transform: uppercase;
+                margin: 0 auto; /* Centering the title */
+                letter-spacing: 4px;
+            }
+
+            p {
+                font-size: 16px;
+                color: #bbb;
+                line-height: 1.5;
+                margin-bottom: 20px;
+            }
+
+            label {
+                font-size: 18px;
+                color: #ccc;
+                margin-bottom: 10px;
+                display: inline-block;
+                font-weight: bold;
+            }
+
+            input[type="file"] {
+                background: #222;
+                color: #00e5ff;
+                border: 2px solid #444;
+                border-radius: 5px;
+                padding: 10px 15px;
+                font-size: 16px;
+                width: 100%;
+                cursor: pointer;
+                margin-bottom: 20px;
+                transition: all 0.3s ease;
+            }
+
+            input[type="file"]:hover {
+                border-color: #00e5ff;
+                background: #333;
+            }
+
+            small {
+                font-size: 12px;
+                color: #777;
+                display: block;
+                margin-top: 10px;
+                text-align: center;
+            }
+
+            #downloads {
+                list-style-type: none;
+                margin-top: 30px;
+            }
+
+            li {
+                margin: 10px 0;
+                text-align: center;
+            }
+
+            .download-link {
+                color: #00e5ff;
+                font-size: 16px;
+                text-decoration: none;
+                padding: 10px 20px;
+                border: 2px solid #00e5ff;
+                border-radius: 5px;
+                transition: all 0.3s ease;
+            }
+
+            .download-link:hover {
+                background-color: #00e5ff;
+                color: #1e1e1e;
+                transform: translateY(-3px);
+            }
+
+            #error {
+                color: #ff4d4d;
+                font-size: 16px;
+                text-align: center;
+                margin-top: 20px;
+                display: none;
+            }
+
+            /* Animations */
+            @keyframes glowing {
+                0% { text-shadow: 0 0 5px #00e5ff, 0 0 10px #00e5ff, 0 0 20px #00e5ff; }
+                50% { text-shadow: 0 0 10px #00e5ff, 0 0 20px #00e5ff, 0 0 30px #00e5ff; }
+                100% { text-shadow: 0 0 5px #00e5ff, 0 0 10px #00e5ff, 0 0 20px #00e5ff; }
+            }
+
+            h1 {
+                animation: glowing 1.5s infinite;
+            }
+
+            footer {
+                position: absolute;
+                bottom: 10px;
+                color: #bbb;
+                font-size: 14px;
+                text-align: center;
+                width: 100%;
+            }
+
+            footer a {
+                color: #00e5ff;
+                text-decoration: none;
+            }
+
+            footer a:hover {
+                text-decoration: underline;
+            }
+
+        </style>
+    </head>
+    <body>
+        <section>
+            <h1>BloxSchem 🚀</h1>
+            <p>Let’s get your .schem files into shape! Convert those pesky WorldEdit 1.13+ files into the legendary 1.12- .schematic files you know and love. 🌈</p>
+            <p>Warning: Blocks that didn’t exist in 1.12 will be replaced by magical *AIR* (we're not kidding, it's invisible). ✨</p>
+            <label for="file">Drag and drop your .schem file here (or click to select it manually – we won’t judge 😉)</label>: 
+            <input id="file" type="file" onchange="upload(this)" multiple/><br/>
+            <small>Privacy notice: We don't do cloud uploads. Your files stay on your machine – like a secret agent. 🕵️‍♂️</small>
+            <ul id="downloads"></ul>
+            <p id="error"></p>
+        </section>
+
+        <!-- Footer -->
+        <footer>
+            Built by <a href="https://www.youtube.com/@RonWasTaken" target="_blank">RonWasTaken</a> (aka the Schematron Master 🧙‍♂️)
+        </footer>
+    </body>
+</html>
